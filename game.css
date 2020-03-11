@@ -18,8 +18,13 @@ margin: 0rem;
 
 #content {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-image: url(./Images/bg2.png);
     height: 640px;
+}
+
+.img {
+    width: 500px;
 }
