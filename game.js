@@ -1,6 +1,19 @@
-
-
 window.onload = () => {
+  
+  let score = 0;
+  let highscore = 0;
+  localStorage.setItem("highscore",0);
+  if (score > parseInt(localStorage.getItem("highscore"))) {
+    localStorage.setItem("highscore", score);
+    console.log(highscore)
+  }
+
+  document.getElementById('start-button').onclick = () => {
+    myGameArea.start();
+    startScreen.style.display = 'none';
+  }
+
+ let startScreen = document.getElementById('content');
   let myBonus = [];
   let myObstacles = [];
   let lastObstacles = [];
@@ -16,17 +29,27 @@ window.onload = () => {
   // ==============> IMAGENS <=============
   
   let img = new Image();
-  img.src = './Images/bg.jpg'
+  img.src = './Images/bg2.png'
   let sprite = new Image();
-  sprite.src = './Images/sprite-op1.png';
+  sprite.src = './Images/dribbble.png';
   let sprite2 = new Image();
-  sprite2.src = './Images/sprite-op2.png'
+  sprite2.src = './Images/dribble2.png'
+  let sprite3 = new Image();
+  sprite3.src = './Images/dribble3.png'
   let points = new Image();
-  points.src = './Images/bonus.png';
+  points.src = './Images/coin.png';
   let obst = new Image();
   obst.src = './Images/box--v1.png';
   let lastObs = new Image();
-  lastObs.src = './Images/119505.png';
+  lastObs.src = './Images/gunter.png';
+  let gameOver = new Image();
+gameOver.src = './Images/game-ver.png'; 
+
+let getCoinSound = new Audio();
+getCoinSound.src = './sounds/coin_appear.wav';
+
+let gameOverSound = new Audio();
+gameOverSound.src = './sounds/25664401_game-over_by_hotbanger_preview.mp3';
   
 
   
@@ -40,8 +63,8 @@ window.onload = () => {
       y: 0,
       speed: -2,
       start: function() {
-        this.canvas.width = 1410;
-        this.canvas.height = 620;
+        this.canvas.width = 1440;
+        this.canvas.height = 640;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         updateGameArea();
@@ -55,6 +78,11 @@ window.onload = () => {
       stop: function() {
           // clearInterval(this.interval);
           window.cancelAnimationFrame(requestedId);
+          this.context.drawImage(gameOver, 600, 100, 400, 475)
+          setInterval(() => {
+           window.location.reload();
+          }, 1500)
+          
         },
         score: function() {
           this.context.font = "18px serif";
@@ -75,6 +103,8 @@ window.onload = () => {
                this.context.drawImage(img, this.x - this.canvas.width, this.y, this.canvas.width, this.canvas.height);
              }
           }
+
+
       }
   
      
@@ -133,22 +163,26 @@ window.onload = () => {
         }
         draw () {
           var ctx = myGameArea.context;
-          if (animation <= 10) {
-          ctx.drawImage(sprite, player.x, player.y, 70, 150);
+          if (animation <= 12) {
+          ctx.drawImage(sprite, player.x, player.y, 95, 150);
           animation += 1
           }
-        else if (animation <= 19) {
-          ctx.drawImage(sprite2, player.x, player.y, 70, 150);
+        else if (animation <= 24) {
+          ctx.drawImage(sprite2, player.x, player.y, 95, 150);
           animation += 1
         }
-   else if (animation > 17) { 
-  animation = 0; 
-  }
-    } 
+        else if (animation <= 36){
+          ctx.drawImage(sprite3, player.x, player.y, 95, 150);
+          animation += 1
+    } else {
+      animation = 0; 
+    }
+
+    }
   }
 
      // ==============> PLAYER <=============
-     let player = new Component(70, 150, "#FFC300", 0, 300);
+     let player = new Component(60, 130, "#FFC300", 0, 300);
     
   
   // ==============> ATUALIZAÇÃO DA TELA DO JOGO <=============
@@ -165,13 +199,13 @@ window.onload = () => {
       checkPoint();
       updateObstacles();
       checkCrashObs();
-      checkMenusPoint();
+      // checkMenusPoint();
     requestedId = window.requestAnimationFrame(updateGameArea);
     checkGameOver();
     }
   
     //inicia o jogo
-    myGameArea.start();
+    // myGameArea.start();
   
     document.onkeydown = function(e) {
       switch (e.keyCode) {
@@ -180,15 +214,15 @@ window.onload = () => {
           player.y = 180;
           player.speedY = 0;
         } else if (player.y > 180) {
-        player.speedY -= 2;
+        player.speedY -= 3;
         }
         break;
         case 40: // down arrow
-        if(player.y > 500) {
-          player.y = 500;
+        if(player.y > 470) {
+          player.y = 470;
           player.speedY = 0;
-        } else if (player.y < 500) {
-        player.speedY += 2;
+        } else if (player.y < 470) {
+        player.speedY += 3;
         }
         break;
         case 37: // left arrow
@@ -196,7 +230,7 @@ window.onload = () => {
           player.x = 0;
           player.speedX = 0;
         } else if (player.x > 0){
-        player.speedX -= 2;
+        player.speedX -= 3;
         }
           break;
         case 39: // right arrow
@@ -204,7 +238,7 @@ window.onload = () => {
           player.x = 1300;
           player.speedX = 0;
         } else if (player.x < 1300) {
-          player.speedX += 2;
+          player.speedX += 3;
         }
           break;
       }
@@ -215,34 +249,43 @@ window.onload = () => {
       player.speedY = 0;
     };
   
+
   // ==============> BONUS <=============
      function updateBonus() {
 
       for (i = 0; i < myBonus.length; i++) {
-        myBonus[i].x += -2;
+          myBonus[i].x += -3;
+        if(count >= 4 && count <= 10) {
+          myBonus[i].x += -1;
+        } else if (count >= 11 && count <= 16) {
+          myBonus[i].x += -2;
+        } else if (count >= 16 && count <= 22) {
+          lmyBonus[i].x += -2;
+        }
         myBonus[i].update(points);
       }
     myGameArea.frames += 1;
     if (myGameArea.frames % 200 === 0) {
-      let minHeight =200;
+      let minHeight =250;
       let x = myGameArea.canvas.width;
-      let maxHeight = 550;
+      let maxHeight = 530;
       let height = Math.floor(
         Math.random() * (maxHeight - minHeight + 1) + minHeight);
         myBonus.push(new Component(40, 40, "green", 1400, Math.floor(
           Math.random() * (myGameArea.canvas.height - 400)+ 400)))        
        
     }
+ 
   }
 
   //verifica se houve colisão e remove o quadrado
   function checkCrash() {
-    console.log(myBonus);
     myBonus.some(function(bonus) {
      let crash = player.crashWith(bonus);
      if (crash) {
       bonus.width = 0;
       bonus.height = 0;
+      getCoinSound.play();
      }
     });
    }
@@ -253,57 +296,64 @@ window.onload = () => {
        if(obs.width === 0 && obs.height === 0) {
         myBonus.splice(idx, 1); 
         count += 1;
-       }
+       } 
      })
    }
   
 
 
-  // ==============> OBSTACULOS <=============
-  function updateObstacles() {
+  // // ==============> OBSTACULOS <=============
+  // function updateObstacles() {
   
   
-    for (i = 0; i < myObstacles.length; i++) {
-      myObstacles[i].x += -2;
-      myObstacles[i].update(obs);
-    }
-  // myGameArea.frames += 2;
-  if (myGameArea.frames % 80 === 0) {
-    let minHeight = 220;
-    let x = myGameArea.canvas.width;
-    let maxHeight = 550;
-    let height = Math.floor(
-      Math.random() * (maxHeight - minHeight + 1) + minHeight);
-      myObstacles.push(new Component(100, 100, "red", x, height));
-   }
-  }
-  //verifica se houve colisão e remove o quadrado
-  function checkCrashObs() {
-    myObstacles.some(function(obstacles) {
-     let crash = player.crashWith(obstacles);
-     if (crash) {
-      obstacles.width = 0;
-      obstacles.height = 0;
-     }
-    });
-   }
+  //   for (i = 0; i < myObstacles.length; i++) {
+  //     myObstacles[i].x += -3;
+  //     myObstacles[i].update(obs);
+  //   }
+  // // myGameArea.frames += 2;
+  // if (myGameArea.frames % 80 === 0) {
+  //   let minHeight = 220;
+  //   let x = myGameArea.canvas.width;
+  //   let maxHeight = 550;
+  //   let height = Math.floor(
+  //     Math.random() * (maxHeight - minHeight + 1) + minHeight);
+  //     myObstacles.push(new Component(100, 100, "red", x, height));
+  //  }
+  // }
+  // //verifica se houve colisão e remove o quadrado
+  // function checkCrashObs() {
+  //   myObstacles.some(function(obstacles) {
+  //    let crash = player.crashWith(obstacles);
+  //    if (crash) {
+  //     obstacles.width = 0;
+  //     obstacles.height = 0;
+  //    }
+  //   });
+  //  }
   
-  //  remove um ponto se houve colisão
-   function checkMenusPoint() {
-    myObstacles.forEach((obs, idx) => { 
-      if(obs.width === 0 && obs.height === 0) {
-        myObstacles.splice(idx, 1); 
-        count -= 1;
-       }
-     })
-   }
+  // //  remove um ponto se houve colisão
+  //  function checkMenusPoint() {
+  //   myObstacles.forEach((obs, idx) => { 
+  //     if(obs.width === 0 && obs.height === 0) {
+  //       myObstacles.splice(idx, 1); 
+  //       count -= 1;
+  //      }
+  //    })
+  //  }
 
   
 // ==============> OBSTACULOS GAME OVER <=============
 function updateObstacles() {
   
   for (i = 0; i < lastObstacles.length; i++) {
-    lastObstacles[i].x += -2;
+    lastObstacles[i].x += -3;
+    if(count >= 4 && count <= 10) {
+      lastObstacles[i].x += -1;
+    } else if (count >= 11 && count <= 16) {
+      lastObstacles[i].x += -2;
+    } else if (count >= 16 && count <= 22) {
+      lastObstacles[i].x += -2;
+    }
     lastObstacles[i].update(lastObs);
   }
 if (myGameArea.frames % 150 === 0) {
@@ -312,7 +362,7 @@ if (myGameArea.frames % 150 === 0) {
   let maxHeight = 550;
   let height = Math.floor(
     Math.random() * (maxHeight - minHeight + 1) + minHeight);
-    lastObstacles.push(new Component(80, 80, "red", x, height));
+    lastObstacles.push(new Component(60, 60, "red", x, height));
  }
 }
 // ------ perda de pontos -------
@@ -327,27 +377,21 @@ function checkCrashObs() {
   });
  }
 
-//  remove um ponto se houve colisão
- function checkMenusPoint() {
-  lastObstacles.forEach((obs, idx) => { 
-    if(obs.width === 0 && obs.height === 0) {
-      lastObstacles.splice(idx, 1); 
-      count -= 1;
-     }
+//  acaba o jogo se houver colisão
+function checkGameOver() {
+  lastObstacles.forEach(obs => { 
+        if(obs.width === 0 && obs.height === 0) {
+          gameOverSound.play();
+          myGameArea.stop(); 
+        }
    })
+
  }
 
-  
-  // ==============> GAME OVER <=============
-  
-   function checkGameOver() {
-  if (count < 0) {
-    myGameArea.stop();
-  }
-    }
+
+}
   
 
-  }
   
   
   
@@ -361,6 +405,3 @@ function checkCrashObs() {
   
   
   
-  
-
-

@@ -1,4 +1,25 @@
-canvas {
+body {
 margin: 0rem;
     
+}
+
+#start-button {
+    background-color:#ffffff;
+	border-radius:27px;
+	display:inline-block;
+	cursor:pointer;
+	color:#53a1af;
+	font-family:Arial;
+	font-size:22px;
+	padding:18px 53px;
+    text-decoration:none;
+    border-style: none;
+}
+
+#content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(./Images/bg2.png);
+    height: 640px;
 }
