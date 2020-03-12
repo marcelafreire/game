@@ -8,7 +8,7 @@ window.onload = () => {
     console.log(highscore)
   }
 
-  document.getElementById('start-button').onclick = () => {
+  document.getElementById('button').onclick = () => {
     myGameArea.start();
     startScreen.style.display = 'none';
   }
@@ -38,18 +38,16 @@ window.onload = () => {
   let sprite3 = new Image();
   sprite3.src = './Images/dribble3.png'
   let points = new Image();
-  points.src = './Images/coin.png';
-  let obst = new Image();
-  obst.src = './Images/box--v1.png';
+  points.src = './Images/pancake.png';
   let lastObs = new Image();
-  lastObs.src = './Images/gunter.png';
+  lastObs.src = './Images/ice-king.png';
   let gameOver = new Image();
   gameOver.src = './Images/game-ver.png';
   let character = new Image();
   character.src = './Images/sprite-adventure.png';
 
   let getCoinSound = new Audio();
-  getCoinSound.src = './sounds/coin_appear.wav';
+  getCoinSound.src = './sounds/burger.wav';
 
   let gameOverSound = new Audio();
   gameOverSound.src = './sounds/25664401_game-over_by_hotbanger_preview.mp3';
@@ -66,8 +64,8 @@ window.onload = () => {
     y: 0,
     speed: -2,
     start: function () {
-      this.canvas.width = 1440;
-      this.canvas.height = 640;
+      this.canvas.width = 800;
+      this.canvas.height = 400;
       this.context = this.canvas.getContext("2d");
       document.body.insertBefore(this.canvas, document.body.childNodes[0]);
       updateGameArea();
@@ -81,10 +79,13 @@ window.onload = () => {
     stop: function () {
       // clearInterval(this.interval);
       window.cancelAnimationFrame(requestedId);
-      this.context.drawImage(gameOver, 600, 100, 400, 475)
+      setInterval(() => {
+        this.context.drawImage(gameOver, 300, 70, 250, 297)();
+      }, 700)
+
       setInterval(() => {
         window.location.reload();
-      }, 1500)
+      }, 1600)
 
     },
     score: function () {
@@ -126,6 +127,7 @@ window.onload = () => {
 
     update(image) {
       var ctx = myGameArea.context;
+      // ctx.fillRect(this.x, this.y, 40, 40);
       ctx.drawImage(image, this.x, this.y, this.width, this.height)
       // ctx.fillStyle = this.color;
       // ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -137,7 +139,7 @@ window.onload = () => {
     }
 
     left() {
-      return this.x;
+      return this.x + 20;
     }
     right() {
       return this.x + this.width;
@@ -166,44 +168,61 @@ window.onload = () => {
     }
 
     draw() {
-    var ctx = myGameArea.context;
-      animation += 1
-      if(animation > 13) {
-        animation = 0
+      var ctx = myGameArea.context;
+        animation += 1
+        if(animation > 13) {
+          animation = 0
+        }
+  
+        sourceX = animation * 64
+        // ctx.drawImage(sprite, posição x de corte + 1, pos y de corte, tamanho total / personagem, altura do personagem, player.x, player.y, 90, 90);
+        // ctx.fillRect(player.x + 25, player.y, 90, 70);
+        ctx.drawImage(character, sourceX + 1, 6, 50, 47, player.x, player.y, 90, 70);
       }
-
-      sourceX = animation * 64
-      // ctx.drawImage(sprite, posição x de corte + 1, pos y de corte, tamanho total / personagem, altura do personagem, player.x, player.y, 90, 90);
-      ctx.drawImage(character, sourceX + 1, 10, 64, 44, player.x, player.y, 90, 90);
-      console.log(sourceX)
-      console.log(animation)
-
-    }
-    //     draw () {
-    //       var ctx = myGameArea.context;
-    //       if (animation <= 12) {
-    //       ctx.drawImage(sprite, player.x, player.y, 95, 150);
-    //       animation += 1
-    //       }
-    //     else if (animation <= 24) {
-    //       ctx.drawImage(sprite2, player.x, player.y, 95, 150);
-    //       animation += 1
-    //     }
-    //     else if (animation <= 36){
-    //       ctx.drawImage(sprite3, player.x, player.y, 95, 150);
-    //       animation += 1
-    // } else {
-    //   animation = 0; 
-    // }
-
-    // }
-
-
 
   }
 
+  class Obstacles extends Component {
+    constructor(width, height, color, x, y) {
+      super(width, height, color, x, y)
+    }
+    
+    left() {
+      return this.x;
+    }
+    right() {
+      return this.x + 50;
+    }
+    top() {
+      return this.y;
+    }
+    bottom() {
+      return this.y + 60;
+    }
+  }
+
+
+  class Bonus extends Component {
+    constructor(width, height, color, x, y) {
+      super(width, height, color, x, y)
+    }
+    
+    left() {
+      return this.x;
+    }
+    right() {
+      return this.x + 40;
+    }
+    top() {
+      return this.y;
+    }
+    bottom() {
+      return this.y + 40;
+    }
+  }
+
   // ==============> PLAYER <=============
-  let player = new Component(60, 130, "#FFC300", 0, 300);
+  let player = new Component(50, 50, "#FFC300", 0, 300);
 
 
   // ==============> ATUALIZAÇÃO DA TELA DO JOGO <=============
@@ -231,19 +250,19 @@ window.onload = () => {
   document.onkeydown = function (e) {
     switch (e.keyCode) {
       case 38: // up arrow
-        if (player.y < 180) {
-          player.y = 180;
+        if (player.y < 140) {
+          player.y = 140;
           player.speedY = 0;
-        } else if (player.y > 180) {
-          player.speedY -= 3;
+        } else if (player.y > 140) {
+          player.speedY = -3;
         }
         break;
       case 40: // down arrow
-        if (player.y > 470) {
-          player.y = 470;
-          player.speedY = 0;
-        } else if (player.y < 470) {
-          player.speedY += 3;
+        if (player.y > 320) {
+          player.y = 320;
+          player.speedY= 0;
+        } else if (player.y < 330) {
+          player.speedY = +3;
         }
         break;
       case 37: // left arrow
@@ -251,7 +270,7 @@ window.onload = () => {
           player.x = 0;
           player.speedX = 0;
         } else if (player.x > 0) {
-          player.speedX -= 3;
+          player.speedX = -3;
         }
         break;
       case 39: // right arrow
@@ -259,7 +278,7 @@ window.onload = () => {
           player.x = 1300;
           player.speedX = 0;
         } else if (player.x < 1300) {
-          player.speedX += 3;
+          player.speedX = +3;
         }
         break;
     }
@@ -277,23 +296,24 @@ window.onload = () => {
     for (i = 0; i < myBonus.length; i++) {
       myBonus[i].x += -3;
       if (count >= 4 && count <= 10) {
-        myBonus[i].x += -1;
+        myBonus[i].x += -2;
       } else if (count >= 11 && count <= 16) {
         myBonus[i].x += -2;
       } else if (count >= 16 && count <= 22) {
-        lmyBonus[i].x += -2;
+        myBonus[i].x += -2;
       }
       myBonus[i].update(points);
     }
     myGameArea.frames += 1;
     if (myGameArea.frames % 200 === 0) {
-      let minHeight = 250;
+      let minHeight = 180;
       let x = myGameArea.canvas.width;
-      let maxHeight = 520;
+      let maxHeight = 350;
       let height = Math.floor(
         Math.random() * (maxHeight - minHeight + 1) + minHeight);
-      myBonus.push(new Component(40, 40, "green", 1400, Math.floor(
-        Math.random() * (myGameArea.canvas.height - 400) + 400)))
+      myBonus.push(new Bonus(40, 40, "green", x, height));
+      
+      
 
     }
 
@@ -323,53 +343,13 @@ window.onload = () => {
 
 
 
-  // // ==============> OBSTACULOS <=============
-  // function updateObstacles() {
-
-
-  //   for (i = 0; i < myObstacles.length; i++) {
-  //     myObstacles[i].x += -3;
-  //     myObstacles[i].update(obs);
-  //   }
-  // // myGameArea.frames += 2;
-  // if (myGameArea.frames % 80 === 0) {
-  //   let minHeight = 220;
-  //   let x = myGameArea.canvas.width;
-  //   let maxHeight = 550;
-  //   let height = Math.floor(
-  //     Math.random() * (maxHeight - minHeight + 1) + minHeight);
-  //     myObstacles.push(new Component(100, 100, "red", x, height));
-  //  }
-  // }
-  // //verifica se houve colisão e remove o quadrado
-  // function checkCrashObs() {
-  //   myObstacles.some(function(obstacles) {
-  //    let crash = player.crashWith(obstacles);
-  //    if (crash) {
-  //     obstacles.width = 0;
-  //     obstacles.height = 0;
-  //    }
-  //   });
-  //  }
-
-  // //  remove um ponto se houve colisão
-  //  function checkMenusPoint() {
-  //   myObstacles.forEach((obs, idx) => { 
-  //     if(obs.width === 0 && obs.height === 0) {
-  //       myObstacles.splice(idx, 1); 
-  //       count -= 1;
-  //      }
-  //    })
-  //  }
-
-
   // ==============> OBSTACULOS GAME OVER <=============
   function updateObstacles() {
 
     for (i = 0; i < lastObstacles.length; i++) {
       lastObstacles[i].x += -3;
       if (count >= 4 && count <= 10) {
-        lastObstacles[i].x += -1;
+        lastObstacles[i].x += -2;
       } else if (count >= 11 && count <= 16) {
         lastObstacles[i].x += -2;
       } else if (count >= 16 && count <= 22) {
@@ -378,12 +358,13 @@ window.onload = () => {
       lastObstacles[i].update(lastObs);
     }
     if (myGameArea.frames % 150 === 0) {
-      let minHeight = 220;
+      let minHeight = 180;
       let x = myGameArea.canvas.width;
-      let maxHeight = 550;
+      let maxHeight = 350;
       let height = Math.floor(
         Math.random() * (maxHeight - minHeight + 1) + minHeight);
-      lastObstacles.push(new Component(60, 60, "red", x, height));
+      lastObstacles.push(new Obstacles(60, 60, "red", x, height));
+      
     }
   }
   // ------ perda de pontos -------
@@ -405,6 +386,17 @@ window.onload = () => {
         gameOverSound.play();
         myGameArea.stop();
       }
+
+       // //  remove um ponto se houve colisão
+  //  function checkMenusPoint() {
+  //   myObstacles.forEach((obs, idx) => { 
+  //     if(obs.width === 0 && obs.height === 0) {
+  //       myObstacles.splice(idx, 1); 
+  //       count -= 1;
+  //      }
+  //    })
+  //  }
+
     })
 
   }

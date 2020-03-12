@@ -1,9 +1,17 @@
+
+@import url('https://fonts.googleapis.com/css?family=Nunito:200i,400,700,900&display=swap');
+
+
 body {
 margin: 0rem;
-    
+height: 100%;
+font-family: 'Nunito', sans-serif;  
+/* background-image: url('./Images/bg-body.png'); */
+overflow: hidden;
+/* background-image: url('./Images/adventure-time-background-hd-2560x1440-333496.jpg');   */
 }
 
-#start-button {
+/* #start-button {
     background-color:#ffffff;
 	border-radius:27px;
 	display:inline-block;
@@ -14,6 +22,12 @@ margin: 0rem;
 	padding:18px 53px;
     text-decoration:none;
     border-style: none;
+} */
+
+canvas {
+  display: block;
+  margin: 8rem auto;
+  
 }
 
 #content {
@@ -21,10 +35,97 @@ margin: 0rem;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url(./Images/bg2.png);
-    height: 640px;
+    background-image: url(./Images/bg-start.png);
+    height: 400px;
+    width: 800px;
+    margin: 8rem auto;
 }
 
 .img {
-    width: 500px;
+    width: 400px;
+    padding-top: 4rem;
 }
+
+/*   
+  .wrap {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+   */
+  #button {
+    min-width: 300px;
+    min-height: 60px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    font-weight: 700;
+    color: #313133;
+    background: rgb(255, 255, 255);
+    background: linear-gradient(90deg, rgb(254, 255, 255) 0%, rgb(213, 250, 246) 100%);
+    border: none;
+    border-radius: 1000px;
+    box-shadow: 12px 12px 24px rgba(79,209,197,.64);
+    transition: all 0.3s ease-in-out 0s;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    padding: 10px;
+    }
+  
+  button::before {
+  content: '';
+    border-radius: 1000px;
+    min-width: calc(300px + 12px);
+    min-height: calc(60px + 12px);
+    border: 6px solid #00FFCB;
+    box-shadow: 0 0 60px rgba(0,255,203,.64);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: all .3s ease-in-out 0s;
+  }
+  
+  #button:hover, .button:focus {
+    color: #313133;
+    transform: translateY(-6px);
+  }
+  
+  button:hover::before, button:focus::before {
+    opacity: 1;
+  }
+  
+  button::after {
+    content: '';
+    width: 30px; height: 30px;
+    border-radius: 100%;
+    border: 6px solid #00FFCB;
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: ring 1.5s infinite;
+  }
+  
+  button:hover::after, button:focus::after {
+    animation: none;
+    display: none;
+  }
+  
+  @keyframes ring {
+    0% {
+      width: 30px;
+      height: 30px;
+      opacity: 1;
+    }
+    100% {
+      width: 300px;
+      height: 300px;
+      opacity: 0;
+    }
+  }
