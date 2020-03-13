@@ -139,7 +139,11 @@ window.onload = () => {
 
     newPos() {
       this.x += this.speedX;
+      if(this.y > 140) {
       this.y += this.speedY;
+      } else {
+        this.y = 141;
+      }
     }
 
     left() {
@@ -195,7 +199,7 @@ window.onload = () => {
       return this.x;
     }
     right() {
-      return this.x + 60;
+      return this.x + 30;
     }
     top() {
       return this.y;
@@ -215,13 +219,13 @@ window.onload = () => {
       return this.x;
     }
     right() {
-      return this.x + 40;
+      return this.x + 60;
     }
     top() {
       return this.y;
     }
     bottom() {
-      return this.y + 40;
+      return this.y + 60;
     }
   }
 
