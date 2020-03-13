@@ -47,10 +47,13 @@ window.onload = () => {
   character.src = './Images/sprite-adventure.png';
 
   let getCoinSound = new Audio();
-  getCoinSound.src = './sounds/burger.wav';
+  getCoinSound.src = './sounds/CLK3PART.mp3';
 
   let gameOverSound = new Audio();
-  gameOverSound.src = './sounds/25664401_game-over_by_hotbanger_preview.mp3';
+  gameOverSound.src = './sounds/game-over-sound-effect.mp3';
+
+  let gameMusic = new Audio();
+  gameMusic.src = './sounds/MainTheme.wav';
 
 
 
@@ -69,6 +72,7 @@ window.onload = () => {
       this.context = this.canvas.getContext("2d");
       document.body.insertBefore(this.canvas, document.body.childNodes[0]);
       updateGameArea();
+      // gameMusic.play();
     },
 
     clear: function () {
@@ -191,7 +195,7 @@ window.onload = () => {
       return this.x;
     }
     right() {
-      return this.x + 50;
+      return this.x + 60;
     }
     top() {
       return this.y;
@@ -296,16 +300,26 @@ window.onload = () => {
     for (i = 0; i < myBonus.length; i++) {
       myBonus[i].x += -3;
       if (count >= 4 && count <= 10) {
-        myBonus[i].x += -2;
+        myBonus[i].x += -1;
       } else if (count >= 11 && count <= 16) {
         myBonus[i].x += -2;
-      } else if (count >= 16 && count <= 22) {
-        myBonus[i].x += -2;
+      } else if (count >= 17 && count <= 22) {
+        myBonus[i].x += -4;
+      } else if (count >= 23 && count <= 28) {
+        myBonus[i].x += -5;
+      } else if (count >= 29 && count <= 34) {
+        myBonus[i].x += -6;
+      } else if (count >= 35 && count <= 40) {
+        myBonus[i].x += -7;
+      } else if (count >= 41 && count <= 46) {
+        myBonus[i].x += -8;
+      } else if (count >= 47 && count <= 52) {
+        myBonus[i].x += -9;
       }
       myBonus[i].update(points);
     }
     myGameArea.frames += 1;
-    if (myGameArea.frames % 200 === 0) {
+    if (myGameArea.frames % 100 === 0) {
       let minHeight = 180;
       let x = myGameArea.canvas.width;
       let maxHeight = 350;
@@ -349,18 +363,28 @@ window.onload = () => {
     for (i = 0; i < lastObstacles.length; i++) {
       lastObstacles[i].x += -3;
       if (count >= 4 && count <= 10) {
-        lastObstacles[i].x += -2;
+        lastObstacles[i].x += -1;
       } else if (count >= 11 && count <= 16) {
         lastObstacles[i].x += -2;
       } else if (count >= 16 && count <= 22) {
-        lastObstacles[i].x += -2;
+        lastObstacles[i].x += -4;
+      } else if (count >= 16 && count <= 28) {
+        lastObstacles[i].x += -5;
+      } else if (count >= 16 && count <= 34) {
+        lastObstacles[i].x += -6;
+      } else if (count >= 16 && count <= 40) {
+        lastObstacles[i].x += -7;
+      } else if (count >= 16 && count <= 46) {
+        lastObstacles[i].x += -8;
+      } else if (count >= 47 && count <= 52) {
+        lastObstacles[i].x += -9;
       }
       lastObstacles[i].update(lastObs);
     }
-    if (myGameArea.frames % 150 === 0) {
+    if (myGameArea.frames % 80 === 0) {
       let minHeight = 180;
       let x = myGameArea.canvas.width;
-      let maxHeight = 350;
+      let maxHeight = 330;
       let height = Math.floor(
         Math.random() * (maxHeight - minHeight + 1) + minHeight);
       lastObstacles.push(new Obstacles(60, 60, "red", x, height));
